@@ -22,7 +22,7 @@ class Img_viewer(QWidget):
         v_layout.addWidget(self.lb1)
         self.setLayout(v_layout)
 
-        self.lb1.setFixedSize(680,480)#控件固定大小640x480
+        self.lb1.setFixedSize(800,600)#控件固定大小800x600 TODO:可以在设置里调节lb1大小。
         #self.lb1.setScaledContents(True)
         self.lb1.setAlignment(Qt.AlignCenter)#内容中置
 
@@ -52,7 +52,11 @@ class Img_viewer(QWidget):
 
     def play(self,input_data_tuple):
         pixmap=QPixmap(input_data_tuple[2])
-        pixmap.scaledToHeight(self.lb1.height())#随高度变化
+        #if(pixmap.height()>self.lb1.height()):
+        #   pixmap.scaledToHeight(self.lb1.height())#随高度变化
+        #elif(pixmap.width()>self.lb1.width()):
+        #    pixmap.scaledToWidth(self.lb1.width())#随宽度变化
+        pixmap.scaled(QSize(self.lb1.width(),self.lb1.height()),aspectRatioMode=Qt.KeepAspectRatio)#尽可能让图片适应窗lb1大小
         self.lb1.setPixmap(pixmap)
 
     def choose_one(self):#在play_list中选择一张图片备展示，并返回信息元组。在外部使用时应先保存此信息元组，再传入play()方法使用。
