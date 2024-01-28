@@ -22,6 +22,10 @@ class Img_viewer(QWidget):
         v_layout.addWidget(self.lb1)
         self.setLayout(v_layout)
 
+        self.lb1.setFixedSize(680,480)#控件固定大小640x480
+        #self.lb1.setScaledContents(True)
+        self.lb1.setAlignment(Qt.AlignCenter)#内容中置
+
     def set_stage_name(self,stage_name):#传入stage名
         self.stage=stage_name
      
@@ -48,6 +52,7 @@ class Img_viewer(QWidget):
 
     def play(self,input_data_tuple):
         pixmap=QPixmap(input_data_tuple[2])
+        pixmap.scaledToHeight(self.lb1.height())#随高度变化
         self.lb1.setPixmap(pixmap)
 
     def choose_one(self):#在play_list中选择一张图片备展示，并返回信息元组。在外部使用时应先保存此信息元组，再传入play()方法使用。
