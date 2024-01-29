@@ -56,10 +56,32 @@ class Btn(QPushButton):#KLM按钮通用模版封装
     #    if(event.key()==self.hot_key):
     #        self.signal.emit(True)
 
+class Menu_buttons(QWidget):
+    signal=pyqtSignal(str)
+    def __init__(self):
+        super(Menu_buttons,self).__init__()
+        #(self.btn_load,self.btn_start,self.btn_exit)=(QPushButton() for i in range(3))
+        self.btn_load=QPushButton("载入")
+        self.btn_start=QPushButton("开始(&Y)")
+        self.btn_exit=QPushButton("退出")
+        self.btn_load.clicked.connect(lambda:self.signal.emit("load"))
+        self.btn_start.clicked.connect(lambda:self.signal.emit("start"))
+        self.btn_exit.clicked.connect(lambda:self.signal.emit("exit"))
+
+        h_layout=QHBoxLayout()
+        h_layout.addWidget(self.btn_load)
+        h_layout.addWidget(self.btn_start)
+        h_layout.addWidget(self.btn_exit)
+        self.setLayout(h_layout)
+
+    def keyPressEvent(self,event):#TODO:应加入自定义键位功能。
+        if(event.key()==Qt.Key_Y):self.signal.emit("start")
+
 if(__name__=="__main__"):
     app=QApplication(sys.argv)
     #a=Btn("KKKKKK",Qt.Key_K)
     #a.show()
-    a=KLM_buttons()
+    #a=KLM_buttons()
+    a=Menu_buttons()
     a.show()
     sys.exit(app.exec())
