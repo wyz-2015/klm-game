@@ -7,13 +7,19 @@ import os
 from core.img_viewer import *
 from core.buttons import *
 from core.ruler import *
+from core.stage import *
 
 class Main(QWidget):
     def __init__(self):
-        super(Main,self).__init__()
-    
+        super(Main,self).__init__() 
+
+        self.setWindowTitle("K&L&M 反应测试游戏")
+
         #self.v_layout=QVBoxLayout()
-        self.reset(is_first=True)
+        self.img_viewer=Img_viewer()
+        self.first_launch=True#这已经是第3个为了控制流程设计的is_first变量了……
+        self.first_load()
+        #self.reset(is_first=True)
 
     def reset(self,is_first=False):
         self.ruler=Ruler()
@@ -33,11 +39,12 @@ class Main(QWidget):
                 if(widget):
                     widget.setParent(None)
 
-        self.img_viewer=Img_viewer("ms_cs")
-        choice=self.img_viewer.choose_one()
-        self.ruler.img_read(choice)
-        print(choice)
-        self.img_viewer.play(choice)
+        #self.img_viewer=Img_viewer("ms_cs")
+        if(self.img_viewer.stage):
+            choice=self.img_viewer.choose_one()
+            self.ruler.img_read(choice)
+            print(choice)
+            self.img_viewer.play(choice)
         
         self.isFirst=True#由于首次展示图片较为特殊，需要引入此变量标识为首次使用。
 
@@ -74,11 +81,14 @@ class Main(QWidget):
         if(self.test_time==0):
             self.ruler.timer_end()
             
-            result="作答：{0}\n答案：{1}\n得分：{2}\n总分：{3:n}\t用时：{4:.9f} s".format(self.ruler.choice_list,\
+            result="玩家：{5:s}\n作答：{0}\n答案：{1}\n得分：{2}\n总分：{3:n}\t用时：{4:.9f} s".format(\
+                    self.ruler.choice_list,\
                     self.ruler.make_answers(),\
                     self.ruler.total(),\
                     sum(self.ruler.total()),\
-                    self.ruler.total_time())
+                    self.ruler.total_time(),\
+                    self.player_name\
+                    )
             QMessageBox.information(self,"本局游戏结果",result)
             #sys.exit()
             self.reset(is_first=False)
@@ -92,6 +102,24 @@ class Main(QWidget):
             self.btns1.setFocus()#在切换控件btn1后，主动加入焦点，否则焦点将停留在btns2，使得KLM热键失效。
             self.change_img(None)
             self.ruler.timer_start()
+        elif(signal=="load"):
+            #self.first_load()
+            self.load_window.show()
+
+    def first_load(self):
+        self.load_window=Stage()        
+        self.load_window.signal.connect(self.load_window_func)
+        self.load_window.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.load_window.show()
+
+    def load_window_func(self,message):
+        print(message,bool(message))
+        self.img_viewer.set_stage_name(message[1])
+        self.player_name=message[0]
+        print(self.img_viewer.stage)
+
+        self.reset(is_first=self.first_launch)
+        self.first_launch=False
 
 if(__name__=="__main__"):
     app=QApplication(sys.argv)

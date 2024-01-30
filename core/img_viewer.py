@@ -9,13 +9,13 @@ import random
 META_DIR=Path(os.path.abspath("./"))
 
 class Img_viewer(QWidget):
-    def __init__(self,stage_name):#初始化时需要传入stage名一次
+    def __init__(self,stage_name=None):#初始化时需要传入stage名一次 ——现在不需要了，允许类现在允许先实例化再“set_stage_name”。2024-01-31 02:19:22
         super(Img_viewer,self).__init__()
 
         self.META_DIR=META_DIR
         self.META_IMG_DIR=self.META_DIR / "stages"
         self.stage=stage_name
-        self.play_list=self.make_play_list()
+        if(self.stage):self.play_list=self.make_play_list()
         
         self.lb1=QLabel()
         v_layout=QVBoxLayout()
@@ -28,6 +28,7 @@ class Img_viewer(QWidget):
 
     def set_stage_name(self,stage_name):#传入stage名
         self.stage=stage_name
+        if(self.stage):self.play_list=self.make_play_list()
      
     def make_play_list(self):#解析stage中信息
         stg_dir=self.META_IMG_DIR / self.stage

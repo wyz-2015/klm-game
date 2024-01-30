@@ -1,0 +1,66 @@
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+import sys
+import os
+from pathlib import *
+
+META_DIR=Path(os.path.abspath("./"))
+#META_IMG_DIR
+
+class Stage(QWidget):
+    signal=pyqtSignal(tuple)
+    def __init__(self):
+        self.META_IMG_DIR=META_DIR / "stages"
+        super(Stage,self).__init__()
+        self.setWindowTitle("选择模组")
+        
+        self.combo_box=QComboBox()
+        self.stage_list=self.get_stage_list()
+        self.combo_box.addItems(self.stage_list)
+        #self.signal.emit(("Nameless","default"))#初始化时先传出一个default,列表中的第0项
+        #self.combo_box.textActivated.connect(self.send_message)
+
+        self.lb1=QLabel("请选择要用于游戏的图片模组：\n(它们都应以目录形式存放于“stages”目录中。)")
+
+        self.lb2=QLabel("玩家ID：")
+        self.name_line_edit=QLineEdit()
+        self.name_line_edit.setText("Nameless")
+        #self.name_line_edit.textEdited.connect(self.send_message)
+        h_layout=QHBoxLayout()
+        h_layout.addWidget(self.lb2)
+        h_layout.addWidget(self.name_line_edit)
+
+        self.btn1=QPushButton("确定")
+        self.btn1.clicked.connect(self.btn1_func)
+
+        v_layout=QVBoxLayout()
+        v_layout.addLayout(h_layout)
+        v_layout.addWidget(self.lb1)
+        v_layout.addWidget(self.combo_box)
+        v_layout.addWidget(self.btn1)
+        self.setLayout(v_layout)
+
+    def get_stage_list(self):
+        stage_list=[i.name for i in self.META_IMG_DIR.iterdir() if(i.is_dir() and i.name!="default")]
+        stage_list=["default"]+stage_list#这样保证default在第0项。
+        return stage_list
+
+    def send_message(self):
+        player_name=self.name_line_edit.text()
+        stage_name=self.combo_box.currentText()
+        message=(player_name,stage_name)
+        print(message)
+        self.signal.emit(message)
+
+    def btn1_func(self):
+        self.send_message()
+        self.close()
+
+if(__name__=="__main__"):
+    META_DIR=Path(os.path.abspath("./../"))
+    app=QApplication(sys.argv)
+    a=Stage()
+    a.show()
+    print(a.get_stage_list())
+    sys.exit(app.exec())
