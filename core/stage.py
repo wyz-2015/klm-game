@@ -36,11 +36,19 @@ class Stage(QWidget):
         h_layout.addWidget(self.lb2)
         h_layout.addWidget(self.name_line_edit)
 
+        self.lb4=QLabel("请选择单局游戏题数：")
+        self.combo_box2=QComboBox()
+        self.combo_box2.addItems(["10","20","30"])
+        h_layout2=QHBoxLayout()
+        h_layout2.addWidget(self.lb4)
+        h_layout2.addWidget(self.combo_box2)
+
         v_layout=QVBoxLayout()
         v_layout.addLayout(h_layout)
         v_layout.addWidget(self.lb1)
         v_layout.addWidget(self.combo_box)
         v_layout.addWidget(self.lb3)
+        v_layout.addLayout(h_layout2)
         v_layout.addWidget(self.btn1)
         self.setLayout(v_layout)
 
@@ -52,7 +60,8 @@ class Stage(QWidget):
     def send_message(self):
         player_name=self.name_line_edit.text()
         stage_name=self.combo_box.currentText()
-        message=(player_name,stage_name)
+        rounds=int(self.combo_box2.currentText())#单局游戏的题数
+        message=(player_name,stage_name,rounds)
         print(message)
         self.signal.emit(message)
 

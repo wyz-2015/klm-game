@@ -3,11 +3,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import os
+import time
 
 from core.img_viewer import *
 from core.buttons import *
 from core.ruler import *
 from core.stage import *
+from core.save import *
 
 class Main(QWidget):
     def __init__(self):
@@ -20,10 +22,11 @@ class Main(QWidget):
         self.first_launch=True#这已经是第3个为了控制流程设计的is_first变量了……
         self.first_load()
         #self.reset(is_first=True)
+        self.rounds=None#为了交互界面中设定游戏次数使用的变量
 
     def reset(self,is_first=False):
         self.ruler=Ruler()
-        self.ruler.set_test_time(3)
+        self.ruler.set_test_time(self.rounds)
         self.test_time=self.ruler.test_time#实际上应为用户该作答的次数，默认15次
 
         if(not is_first):#非首轮游戏时，每轮游戏前清空v_layout内所有控件。
@@ -89,6 +92,23 @@ class Main(QWidget):
                     self.ruler.total_time(),\
                     self.player_name\
                     )
+
+            self.saver=Saver()#TODO:要能自定义存档位置
+            t=time.localtime()
+            #(玩家ID,选用模组,正确数,总题数,用时,rating,日期,时间)
+            data_tuple=(\
+                        self.player_name,\
+                                self.img_viewer.stage,\
+                                sum(self.ruler.total()),\
+                                self.ruler.test_time,\
+                                round(self.ruler.total_time(),9),\
+                                round(sum(self.ruler.total())/self.ruler.total_time(),5),\
+                                time.strftime("%Y-%m-%d",t),\
+                                time.strftime("%H:%M:%S",t)\
+                                )
+
+            self.saver.add_score(data_tuple)
+
             QMessageBox.information(self,"本局游戏结果",result)
             #sys.exit()
             self.reset(is_first=False)
@@ -116,6 +136,7 @@ class Main(QWidget):
         print(message,bool(message))
         self.img_viewer.set_stage_name(message[1])
         self.player_name=message[0]
+        self.rounds=message[2]
         print(self.img_viewer.stage)
 
         self.reset(is_first=self.first_launch)
