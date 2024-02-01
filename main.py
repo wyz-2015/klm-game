@@ -10,6 +10,7 @@ from core.buttons import *
 from core.ruler import *
 from core.stage import *
 from core.save import *
+from core.key_settings import *
 
 class Main(QWidget):
     def __init__(self):
@@ -65,6 +66,9 @@ class Main(QWidget):
         self.v_layout.addWidget(self.img_viewer)
         self.v_layout.addWidget(self.btns2)
         print("self.layout().count()={0}".format(self.layout().count()))
+        
+        self.k_s_window=K_s_window()
+        self.k_s_window.signal.connect(self.sync_keys)
 
     def change_img(self,c):
         print(self.test_time)
@@ -125,7 +129,9 @@ class Main(QWidget):
         elif(signal=="load"):
             #self.first_load()
             self.load_window.show()
-
+        elif(signal=="option"):
+            self.k_s_window.show()
+            
     def first_load(self):
         self.load_window=Stage()        
         self.load_window.signal.connect(self.load_window_func)
@@ -141,6 +147,10 @@ class Main(QWidget):
 
         self.reset(is_first=self.first_launch)
         self.first_launch=False
+
+    def sync_keys(self):
+        self.btns1.sync_keys()
+        self.btns2.sync_keys()
 
 if(__name__=="__main__"):
     app=QApplication(sys.argv)
