@@ -7,11 +7,11 @@ if(__name__!="__main__"):from core.key_settings import *
 
 #game_key=get_current_settings()
 
-class KLM_buttons(QWidget):
+class KLM_buttons(QWidget):#3个游戏键构成的控件
     signal=pyqtSignal(str)
     def __init__(self):
         super(KLM_buttons,self).__init__()
-        self.game_key=get_current_settings()
+        self.game_key=get_current_settings()#对象实例化时刷新键位设置
         #(self.bt_K,self.bt_L,self.bt_M,self.bt_Load,self.bt_Score,self.bt_About)=(QPushButton() for i in range(6))
 
         #bt_K
@@ -20,7 +20,7 @@ class KLM_buttons(QWidget):
         #self.bt_K.clicked.connect(lambda:print("K"))
         #self.
 
-        #TODO:3个键要能在设置里自定义键位。
+        #TODO:3个键要能在设置里自定义键位。——已完成
         self.bt_K=Btn(f"相似(&{self.game_key['K']})",KEYS[self.game_key["K"]])
         self.bt_K.signal.connect(lambda:self.signal.emit("K"))
         self.bt_L=Btn(f"不同(&{self.game_key['L']})",KEYS[self.game_key["L"]])
@@ -65,10 +65,11 @@ class Btn(QPushButton):#KLM按钮通用模版封装
     #    if(event.key()==self.hot_key):
     #        self.signal.emit(True)
 
-class Menu_buttons(QWidget):
+class Menu_buttons(QWidget):#主界面3个按钮的控价
     signal=pyqtSignal(str)
     def __init__(self):
         super(Menu_buttons,self).__init__()
+        self.game_key=get_current_settings()#对象实例化时刷新键位设置
         #(self.btn_load,self.btn_start,self.btn_exit)=(QPushButton() for i in range(3))
         self.btn_load=QPushButton("载入")
         self.btn_start=QPushButton("开始(&Y)")
@@ -83,13 +84,14 @@ class Menu_buttons(QWidget):
         h_layout.addWidget(self.btn_exit)
         self.setLayout(h_layout)
 
-    def keyPressEvent(self,event):#TODO:应加入自定义键位功能。
+    def keyPressEvent(self,event):#TODO:应加入自定义键位功能。——已解决
         if(event.key()==KEYS[self.game_key["Y"]]):self.signal.emit("start")
 
     def sync_keys(self):
         self.game_key=get_current_settings()#刷新设置
         print(self.game_key)
 
+#for test
 if(__name__=="__main__"):
     from key_settings import *
     app=QApplication(sys.argv)

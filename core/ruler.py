@@ -2,7 +2,7 @@
 #from PyQt
 import time
 
-class Ruler():
+class Ruler():#规则器，关于控制游戏流程、产生成绩等
     def __init__(self):
         self.img_list=[]
         self.choice_list=[None]#对于第1张图无需记载其KLM选项
@@ -14,13 +14,13 @@ class Ruler():
     def choice_read(self,choice):#用户在KLM中作选择的记录
         self.choice_list.append(choice)
 
-    def img_read(self,data_tuple):
+    def img_read(self,data_tuple):#读取img_viewer展出的图片的分类
         self.img_list.append(data_tuple[1])
 
     def set_test_time(self,time):#设置测试次数
         self.test_time=time
 
-    def make_answers(self):
+    def make_answers(self):#根据图片展出记录求解本轮游戏答案
         answers=[None]
         for i in range(1,len(self.img_list)-1):#不知为何需要-1
             if(self.img_list[i]=="default"):
@@ -33,7 +33,7 @@ class Ruler():
 
         return answers
 
-    def total(self):
+    def total(self):#统计每题答对情况
         total_list=[]
         answers=self.make_answers()
         #print("{0}\n{1}".format(answers,self.choice_list))

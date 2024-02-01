@@ -8,7 +8,7 @@ from pathlib import *
 META_DIR=Path(os.path.abspath("./"))
 #META_IMG_DIR
 
-class Stage(QWidget):
+class Stage(QWidget):#模组选择器
     signal=pyqtSignal(tuple)
     def __init__(self):
         self.META_IMG_DIR=META_DIR / "stages"
@@ -57,7 +57,7 @@ class Stage(QWidget):
         stage_list=["default"]+stage_list#这样保证default在第0项。
         return stage_list
 
-    def send_message(self):
+    def send_message(self):#将选得的模组信息发送出去
         player_name=self.name_line_edit.text()
         stage_name=self.combo_box.currentText()
         rounds=int(self.combo_box2.currentText())#单局游戏的题数
@@ -99,6 +99,7 @@ class Stage(QWidget):
             self.btn1.setEnabled(True)
             return '<span style="color:green">这个模组适合游戏。</span>'
 
+#for test
 if(__name__=="__main__"):
     META_DIR=Path(os.path.abspath("./../"))
     app=QApplication(sys.argv)

@@ -38,14 +38,14 @@ KEYS={\
             "Z":Qt.Key_Z\
             }
 
-def get_current_settings():
+def get_current_settings():#获取当前键位设定信息的函数，需被频繁调用。
     ws=load_workbook(filename=str(META_DIR / "key_settings.xlsx"))["key"]
     user_keys=[ws[f"B{i}"].value for i in range(2,5+1)]
     d={"Y":user_keys[0],"K":user_keys[1],"L":user_keys[2],"M":user_keys[3]}
     print(d)
     return d
 
-class K_s_window(QWidget):
+class K_s_window(QWidget):#Key_Settings_Window
     signal=pyqtSignal()
     def __init__(self):
         super(K_s_window,self).__init__()
@@ -75,7 +75,7 @@ class K_s_window(QWidget):
         self.setLayout(v_layout)
     
 
-    def write_settings(self):
+    def write_settings(self):#新设定写入文件
         xlsxfile=str(META_DIR / "key_settings.xlsx")
         wb=load_workbook(filename=xlsxfile)
         ws=wb["key"]
@@ -100,7 +100,7 @@ class K_s_window(QWidget):
         self.signal.emit()
         self.close()
 
-class Line(QWidget):
+class Line(QWidget):#封装[QLabel(),QLineEdit()]
     def __init__(self,key):
         super(Line,self).__init__()
         self.lb=QLabel(key)
@@ -117,7 +117,7 @@ class Line(QWidget):
     def edit_line_text(self):
         return self.edit_line.text()
 
-
+#for test
 if(__name__=="__main__"):
     META_DIR=Path(os.path.abspath("./")).parent
     app=QApplication(sys.argv)

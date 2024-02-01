@@ -4,8 +4,8 @@ from pathlib import *
 
 META_DIR=Path(os.path.abspath("./"))
 
-class Saver():
-    def __init__(self,slot="saves.xlsx"):
+class Saver():#成绩信息保存器
+    def __init__(self,slot="saves.xlsx"):#TODO:能自定义存储档位
         self.META_DIR=META_DIR
         self.saves_dir=self.META_DIR / "saves"
         self.slot=self.saves_dir / slot
@@ -35,6 +35,7 @@ class Saver():
         
         self.wb.save(self.slot)
 
+#for test
 if(__name__=="__main__"):
     META_DIR=META_DIR.parent
     a=Saver()

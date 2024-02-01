@@ -70,7 +70,7 @@ class Main(QWidget):
         self.k_s_window=K_s_window()
         self.k_s_window.signal.connect(self.sync_keys)
 
-    def change_img(self,c):
+    def change_img(self,c):#核心方法之一，切换图片并记录游戏数据
         print(self.test_time)
 
         choice=self.img_viewer.choose_one()
@@ -84,7 +84,7 @@ class Main(QWidget):
             self.test_time-=1
             self.ruler.choice_read(c)
 
-        #测试版使用此段代码展示游戏结果
+        #测试版使用此段代码展示游戏结果——但是现在“转正”了~
         if(self.test_time==0):
             self.ruler.timer_end()
             
@@ -132,13 +132,13 @@ class Main(QWidget):
         elif(signal=="option"):
             self.k_s_window.show()
             
-    def first_load(self):
+    def first_load(self):#开启程序时首先提示加载何模组
         self.load_window=Stage()        
         self.load_window.signal.connect(self.load_window_func)
         self.load_window.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.load_window.show()
 
-    def load_window_func(self,message):
+    def load_window_func(self,message):#接受信号中的信息，备写入分数存档中。
         print(message,bool(message))
         self.img_viewer.set_stage_name(message[1])
         self.player_name=message[0]
@@ -148,7 +148,7 @@ class Main(QWidget):
         self.reset(is_first=self.first_launch)
         self.first_launch=False
 
-    def sync_keys(self):
+    def sync_keys(self):#同步新键位设定
         self.btns1.sync_keys()
         self.btns2.sync_keys()
 
